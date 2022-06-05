@@ -1,0 +1,288 @@
+#!/bin/bash
+
+#FUNCTIONS
+
+#FUNCTIONS/modding
+modcode() {
+ echo "Enter mod's code here:"
+read -p "modcode: " modcode
+
+if [[ $you == "a4e2" ]]; then
+echo "code accepted. you can back to your game now."
+else
+echo "code rejected, probably invalid."
+fi
+menu
+}
+
+#FUNCTION/menu
+menu() {
+echo "
+ _______________________
+|                       |
+|1-exit                 |
+|2-map                  |
+|3-inventory            |
+|4-modcode              |
+|_______________________|"
+}
+#FUNCTIONS/getA
+
+doRandom() {
+	echo "${list[${random}]}"
+	random=$(( $RANDOM % 2 ))
+        list=( "Rest" "hunt")
+        case ${list[${random}]} in
+Rest)
+		sleep_
+		;;
+	hunt)
+		hunt good
+		;;
+	esac
+}
+
+#FUNCTIONS/check_map
+big-map_() {
+echo "
+ ________________________________________________________________________________________
+|                                                                                        |
+|  X  ~~~~~~                                                                             |
+|   \~~~~~~~~~~~                                                                         |
+|    \_~~~~~~~~___                                                                       |
+|      \~~~~~~/***\                                                                      |
+|       \____/*****\                     ______________                                  |
+|          ********|                    / ############ \                                 |
+|            **** /                    /############### \                                |
+|        ^^^^^^   |                   / ################ \                               |
+|    ^^^^    ^^^^^_____              /################### \                              |
+|  ^^^^^       ^^^^^^^^ \\         _/ ################### X                              |
+|                 ^^^    \\       / #######################                              |                                                                                                              |
+|              ^^^^       \\      | #####################                                |                                                                |                                                                                                      |
+|                  ^^^^     \\    |  #############                                       |
+|                ^^^^^       \\   |     ######                                           |
+|               ^^^^^         \\  /   ^^^^^^^^                                           |
+|           ^^^^^^             \\/ ^^^^^   _______          ___                          |
+|               ^^              \\        //     \\        /~~~\                         |
+|             ^^   ^             \\___   //      ||       /~~~~~\                        |
+|    ^^^^^    ^^                  \__ \_//       ||      / ~~~~~~\                       |                                                                                                      |
+|         ^^^^           *********** \__/        \\_____/ ~~~~~~~~\                      |
+|                      *************       ~~~~~~~~~~~~~~~~~~~~~~~~\                     |
+|                    ************    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \                    |
+|             ***************** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\                   |
+|                 *************** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|                 |
+|                     ****************    ~~~~~~~~       X    ~~~~~~~/                   |
+|                                                        \ ________/                     |                                                                                                  |
+|________________________________________________________________________________________|
+"
+}
+
+
+#FUNCTIONS/sleep
+
+sleep_() {
+until [[ $stop1 != "m" && $stop1 != "menu" ]]; do
+	echo "you travel for a day, then stop to rest." 
+echo "what would you like to do?
+1 - hunt
+2 - check map
+3 - go to sleep
+m - menu:"
+
+read stop1
+
+case $stop1 in
+
+1|"hunt")
+        option="hunt"
+	hunt
+        ;;
+2|"check map")
+        option="map"
+	print_map
+        ;;
+3|"go to sleep")
+	echo "you go to sleep"
+        ;;
+m|"menu")
+	menu
+	;;
+*)
+        echo "you"
+	sleep 2.5
+	sleep_
+	;;
+esac
+
+done
+}
+
+#FUNCTIONS/enter
+
+enter() {
+	read -p "Press enter to continue..."
+}
+
+#FUNCTIONS/say
+
+
+Say() {
+	echo "$*"; echo $_ | say &
+}
+
+#FUNCTIONS/hunt
+
+hunt() {
+
+if [ "$1" != "good" ]; then
+	echo -en "pick a number between 0-10: "
+read you
+
+shot=$(( $RANDOM % 11 ))
+
+
+if [[ $you -gt $shot ]]; then
+	echo "you got im'!"
+else
+	echo you missed, and scared the animal.
+fi
+else
+echo -en "pick a number between 0-15 (0/15): "
+read you
+
+if [[ $you == $modcode ]]; then
+
+shot=$(( $RANDOM % 21 ))
+
+echo -en "actually, wait, no, you modded me. pick a number between 0-20 (0/20): "
+
+else
+
+shot=$(( $RANDOM % 16 ))
+
+
+if [[ $you -gt $shot ]]; then
+        echo "you got im'!"
+else
+        echo you missed, and scared the animal.
+echo -n "Do you want to: 1 - Continue, or 2 - Hunt again: "
+read pref
+case $pref in
+1) ;;
+2) hunt ;;
+esac
+fi
+fi
+fi
+}
+
+#INTRO
+
+echo "Welcome to Texas Trail"
+ echo
+ sleep 1
+ echo
+#NAMES
+
+ echo "Enter your name here:"
+ read -p "name: " name
+
+echo "welcome, $name!"
+ echo
+ echo "your partner's name here:"
+ read -p "name: " partnername
+echo "Awesowe! your partner's now called $partnername!"
+#HORSE
+
+echo "choose your horse:"
+
+echo "1 - gelding
+2 - paint
+3 - black
+4 - burro
+5 - roan
+
+or you can go to the Menu:
+m - menu"
+
+read horse
+
+case $horse in
+
+1|gelding)
+	horse="gelding"
+	;;
+2|paint)
+	horse="paint"
+	;;
+3|black)
+	horse="black"
+	;;
+4|burro)
+	horse="burro"
+	;;
+5|roan)
+	horse="roan"
+	;;
+m|menu)
+       horse=menu
+       ;;
+*)
+	echo "you didn't pick one! i'm gonna boot you for that!"
+sleep 2.5
+exit
+;;
+
+esac
+if [[ $horse == "m" || $horse == "menu" ]]; then
+menu
+else
+echo "Good choice! the $horse is a good one."
+
+#horsename
+
+echo "Enter your $horse's name here:"
+read -p "horsename: " horsename
+echo -e "\n$horsename. Sounds fitting."
+#backstory/beginning
+fi
+enter
+
+sleep 2
+
+echo -e "you, $name, are a wandering cowhand, looking for work.
+ Your currently in Silver City, New Mexico and want to go to El Paso, Texas.
+ Are you ready for the fifty-somthing mile trip?"
+echo -e "1 - Yes I'm ready!\n2 - No, not yet."
+read you
+
+if [[ $you == 1 || $you == "yes" || $you == "y" ]]; then
+echo "Great! Saddle up $horsename! Lets have a look at the map:"
+echo
+echo \
+"_________________________________
+| you are ^                       |
+|      /\                         |
+|   /\/  \/\           /\         |
+|  /  \   \ \       /\/  /\       |
+|                  /  \ /  \      |
+|                                 |
+|        _ _ _ _ _           __   |
+|       ^          \      __/  \  |
+|                   \    /  \   \ |
+|        __         /             |
+|    __ /  \       /              |
+|   /  \    \      \              |
+|  /    \    \       ~ ----X      |
+|                                 |
+|_________________________________|"
+
+echo "only fifty-somthing miles to go!"
+echo "you will now either hunt for food or take a rest."
+else
+echo "Alright, thats fine. Come back when your ready!"
+exit
+
+fi
+
+doRandom
