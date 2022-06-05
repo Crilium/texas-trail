@@ -25,6 +25,14 @@ echo "
 |3-inventory            |
 |4-modcode              |
 |_______________________|"
+read input
+case $input in
+1|"exit") exit 0 ;;
+2|"map") print_map ;;
+3|"inventory") inventory ;;
+4|"modcode") modcode ;;
+esac
+
 }
 #FUNCTIONS/getA
 
